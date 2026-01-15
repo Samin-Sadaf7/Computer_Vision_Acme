@@ -36,17 +36,17 @@ def train(model, train_loader, val_loader, device, epochs=10, save_curves=True, 
         avg_loss = total_loss / len(train_loader)
         history["loss"].append(avg_loss)
 
-        acc1, acc2, jersey_acc = validate(model, val_loader, device)
-        history["val_d1_acc"].append(acc1)
-        history["val_d2_acc"].append(acc2)
-        history["val_jersey_acc"].append(jersey_acc)
+        results = validate(model, val_loader, device)
+        history["val_d1_acc"].append(results['acc1'])
+        history["val_d2_acc"].append(results['acc2'])
+        history["val_jersey_acc"].append(results['jersey_acc'])
 
         print(
             f"[Epoch {epoch+1}] "
             f"Loss: {avg_loss:.4f} | "
-            f"D1 Acc: {acc1:.3f} | "
-            f"D2 Acc: {acc2:.3f} | "
-            f"Jersey Acc: {jersey_acc:.3f}"
+            f"D1 Acc: {results['acc1']:.3f} | "
+            f"D2 Acc: {results['acc2']:.3f} | "
+            f"Jersey Acc: {results['jersey_acc']:.3f}"
         )
 
     # Plot and save curves

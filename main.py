@@ -32,8 +32,8 @@ def main():
 
     # Evaluate on validation set
     results = validate(model, val_loader, device)
-    print(f"Digit1 Acc: {results['acc1']:.3f}, Prec: {results['prec1']:.3f}, Rec: {results['rec1']:.3f}, F1: {results['f1_1']:.3f}, ROC-AUC: {results['roc1']:.3f}")
-    print(f"Digit2 Acc: {results['acc2']:.3f}, Prec: {results['prec2']:.3f}, Rec: {results['rec2']:.3f}, F1: {results['f1_2']:.3f}, ROC-AUC: {results['roc2']:.3f}")
+    print(f"Digit1 Acc: {results['acc1']:.3f}, Prec: {results['prec1']:.3f}, Rec: {results['rec1']:.3f}, F1: {results['f1_1']:.3f}")
+    print(f"Digit2 Acc: {results['acc2']:.3f}, Prec: {results['prec2']:.3f}, Rec: {results['rec2']:.3f}, F1: {results['f1_2']:.3f}")
     print(f"Jersey Acc: {results['jersey_acc']:.3f}")
 
     # Sample predictions
@@ -44,8 +44,8 @@ def main():
 
     # Evaluate on test set
     test_results = validate(model, test_loader, device)
-    print(f"\n[Test Set] Digit1 Acc: {test_results['acc1']:.3f}, Prec: {test_results['prec1']:.3f}, Rec: {test_results['rec1']:.3f}, F1: {test_results['f1_1']:.3f}, ROC-AUC: {test_results['roc1']:.3f}")
-    print(f"[Test Set] Digit2 Acc: {test_results['acc2']:.3f}, Prec: {test_results['prec2']:.3f}, Rec: {test_results['rec2']:.3f}, F1: {test_results['f1_2']:.3f}, ROC-AUC: {test_results['roc2']:.3f}")    
+    print(f"\n[Test Set] Digit1 Acc: {test_results['acc1']:.3f}, Prec: {test_results['prec1']:.3f}, Rec: {test_results['rec1']:.3f}, F1: {test_results['f1_1']:.3f}")
+    print(f"[Test Set] Digit2 Acc: {test_results['acc2']:.3f}, Prec: {test_results['prec2']:.3f}, Rec: {test_results['rec2']:.3f}, F1: {test_results['f1_2']:.3f}")    
     print(f"[Test Set] Jersey Acc: {test_results['jersey_acc']:.3f}")
     print("\n[INFO] Inference completed")
 

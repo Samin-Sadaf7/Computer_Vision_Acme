@@ -3,8 +3,7 @@ from sklearn.metrics import (
     accuracy_score,
     precision_score,
     recall_score,
-    f1_score,
-    roc_auc_score
+    f1_score
 )
 import numpy as np
 
@@ -62,20 +61,6 @@ def validate(model, dataloader, device):
     # Jersey-level accuracy
     jersey_acc = np.mean((d1_true == d1_pred) & (d2_true == d2_pred))
 
-    # ROC-AUC (One-vs-Rest)
-    try:
-        roc1 = roc_auc_score(
-            np.eye(10)[d1_true], d1_probs, multi_class='ovr'
-        )
-    except ValueError:
-        roc1 = None  # If not enough classes in batch
-
-    try:
-        roc2 = roc_auc_score(
-            np.eye(10)[d2_true], d2_probs, multi_class='ovr'
-        )
-    except ValueError:
-        roc2 = None
 
     results = {
         "acc1": acc1,
@@ -87,8 +72,6 @@ def validate(model, dataloader, device):
         "f1_1": f1_1,
         "f1_2": f1_2,
         "jersey_acc": jersey_acc,
-        "roc1": roc1,
-        "roc2": roc2
     }
 
     return results
