@@ -22,13 +22,12 @@ def main():
     print("[INFO] Model initialized")
 
     # Train the model and plot curves
-    history = train(
+    train(
         model,
         train_loader,
         val_loader,
         device,
-        epochs=10,
-        plot_curves=True
+        epochs=10
     )
 
     # Evaluate on validation set
