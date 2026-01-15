@@ -1,12 +1,22 @@
 import torch
 
-def predict(model, imgs):
-    device = next(model.parameters()).device
+def predict(model, dataloader, device, num_samples=5):
     model.eval()
+    results = []
 
     with torch.no_grad():
-        imgs = imgs.to(device)
-        p1, p2 = model(imgs)
-        d1 = p1.argmax(dim=1)
-        d2 = p2.argmax(dim=1)
-        return d1 * 10 + d2
+        for imgs, d1, d2 in dataloader:
+            imgs = imgs.to(device)
+
+            o1, o2 = model(imgs)
+            p1 = torch.argmax(o1, dim=1)
+            p2 = torch.argmax(o2, dim=1)
+
+            for i in range(len(p1)):
+                gt = int(d1[i]) * 10 + int(d2[i])
+                pred = int(p1[i]) * 10 + int(p2[i])
+                results.append((gt, pred))
+
+                if len(results) >= num_samples:
+                    return results
+    return results
