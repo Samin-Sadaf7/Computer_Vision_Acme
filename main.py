@@ -1,6 +1,6 @@
 import torch
 from dataloader import get_dataloaders
-from model import TemporalJerseyModel
+from model import TemporalJerseyNet
 from train import train
 from validate import validate
 from inference import predict
@@ -15,7 +15,7 @@ def main():
         batch_size=4
     )
 
-    model = TemporalJerseyModel().to(device)
+    model = TemporalJerseyNet().to(device)
     print("[INFO] Model initialized")
 
     train(
