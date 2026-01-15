@@ -1,7 +1,7 @@
 import torch
 from torch.utils.data import DataLoader
 
-from dataloader import JerseySequenceDataset
+from dataset import JerseySequenceDataset
 from model import TemporalJerseyNet
 from train import train
 from inference import predict
