@@ -1,1 +1,11 @@
 temporal_jersey_nr_recognition_dataset_subset
+.DS_Store
+__pycache__/
+*.pyc
+.ipynb_checkpoints
+.vscode/
+.env
+logs/
+results/
+checkpoints/
+data/
