@@ -8,4 +8,4 @@ logs/
 results/
 checkpoints/
 data/
-.DS_Store
+.DS_Store/
