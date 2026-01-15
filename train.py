@@ -2,17 +2,17 @@ import torch
 import torch.nn as nn
 from validate import validate
 import matplotlib.pyplot as plt
+import os
 
-def train(model, train_loader, val_loader, device, epochs=10):
+def train(model, train_loader, val_loader, device, epochs=10, save_curves=True, curves_path="training_curves.png"):
     criterion = nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=1e-4)
 
     history = {
-        "train_loss": [],
-        "val_loss": [],
-        "val_jersey_acc": [],
-        "val_acc1": [],
-        "val_acc2": []
+        "loss": [],
+        "val_d1_acc": [],
+        "val_d2_acc": [],
+        "val_jersey_acc": []
     }
 
     for epoch in range(epochs):
@@ -33,55 +33,50 @@ def train(model, train_loader, val_loader, device, epochs=10):
 
             total_loss += loss.item()
 
-        avg_train_loss = total_loss / len(train_loader)
-        history["train_loss"].append(avg_train_loss)
+        avg_loss = total_loss / len(train_loader)
+        history["loss"].append(avg_loss)
 
-        # Validation
-        model.eval()
-        val_loss_total = 0
-        with torch.no_grad():
-            for imgs, d1, d2 in val_loader:
-                imgs = imgs.to(device)
-                d1 = d1.to(device)
-                d2 = d2.to(device)
-                o1, o2 = model(imgs)
-                val_loss_total += (criterion(o1, d1) + criterion(o2, d2)).item()
-
-        avg_val_loss = val_loss_total / len(val_loader)
-        history["val_loss"].append(avg_val_loss)
-
-        # Get validation metrics (accuracy)
         acc1, acc2, jersey_acc = validate(model, val_loader, device)
-        history["val_acc1"].append(acc1)
-        history["val_acc2"].append(acc2)
+        history["val_d1_acc"].append(acc1)
+        history["val_d2_acc"].append(acc2)
         history["val_jersey_acc"].append(jersey_acc)
 
         print(
-            f"[Epoch {epoch+1}/{epochs}] "
-            f"Train Loss: {avg_train_loss:.4f} | "
-            f"Val Loss: {avg_val_loss:.4f} | "
-            f"D1 Acc: {acc1:.3f} | D2 Acc: {acc2:.3f} | Jersey Acc: {jersey_acc:.3f}"
+            f"[Epoch {epoch+1}] "
+            f"Loss: {avg_loss:.4f} | "
+            f"D1 Acc: {acc1:.3f} | "
+            f"D2 Acc: {acc2:.3f} | "
+            f"Jersey Acc: {jersey_acc:.3f}"
         )
 
-    # Plot training and validation curves
-    plt.figure(figsize=(10,4))
-    plt.subplot(1,2,1)
-    plt.plot(history["train_loss"], label="Train Loss")
-    plt.plot(history["val_loss"], label="Val Loss")
-    plt.title("Loss Curve")
-    plt.xlabel("Epoch")
-    plt.ylabel("Loss")
-    plt.legend()
+    # Plot and save curves
+    if save_curves:
+        epochs_range = range(1, epochs + 1)
+        plt.figure(figsize=(12, 5))
 
-    plt.subplot(1,2,2)
-    plt.plot(history["val_acc1"], label="Digit 1 Acc")
-    plt.plot(history["val_acc2"], label="Digit 2 Acc")
-    plt.plot(history["val_jersey_acc"], label="Jersey Acc")
-    plt.title("Validation Accuracy Curve")
-    plt.xlabel("Epoch")
-    plt.ylabel("Accuracy")
-    plt.legend()
-    plt.tight_layout()
-    plt.show()
+        # Training Loss
+        plt.subplot(1, 2, 1)
+        plt.plot(epochs_range, history["loss"], label="Training Loss", marker='o', color="red")
+        plt.title("Training Loss")
+        plt.xlabel("Epoch")
+        plt.ylabel("Loss")
+        plt.grid(True)
+        plt.legend()
+
+        # Validation Accuracies
+        plt.subplot(1, 2, 2)
+        plt.plot(epochs_range, history["val_d1_acc"], label="D1 Accuracy", marker='o')
+        plt.plot(epochs_range, history["val_d2_acc"], label="D2 Accuracy", marker='o')
+        plt.plot(epochs_range, history["val_jersey_acc"], label="Jersey Accuracy", marker='o', linewidth=2)
+        plt.title("Validation Accuracies")
+        plt.xlabel("Epoch")
+        plt.ylabel("Accuracy")
+        plt.grid(True)
+        plt.legend()
+
+        plt.tight_layout()
+        plt.savefig(curves_path)
+        print(f"[INFO] Training curves saved to {curves_path}")
+        plt.close()
 
     return history
