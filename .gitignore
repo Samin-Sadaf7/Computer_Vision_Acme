@@ -9,3 +9,5 @@ results/
 checkpoints/
 data/
 .DS_Store/
+.idea/
+venv/
