@@ -1,11 +1,13 @@
 import torch.nn as nn
-import torchvision.models as models
+from torchvision.models import mobilenet_v3_small, MobileNet_V3_Small_Weights
+
 
 class TemporalJerseyNet(nn.Module):
     def __init__(self):
-        super().__init__()
+        super().__init__()       
+        weights = MobileNet_V3_Small_Weights.DEFAULT
+        backbone = mobilenet_v3_small(weights=weights)
 
-        backbone = models.mobilenet_v3_small(pretrained=True)
         self.cnn = backbone.features
         self.pool = nn.AdaptiveAvgPool2d(1)
 
